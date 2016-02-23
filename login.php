@@ -1,4 +1,66 @@
 <!doctype html>
+<?php
+	  
+session_start();
+$ip=$_SERVER['REMOTE_ADDR'];
+$mac = shell_exec('arp '.$ip.' | awk \'{print $4}\'');
+$errors = NULL;
+
+//Server Starting connection.
+$servername = "localhost";
+$username = "root";
+$password = "root";
+$dbname = "cipproject";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+     $errors='2';
+} 
+
+if(isset($_POST["username"])&& isset($_POST["pwd"])){
+	
+	//POST METHOD. Check Authentication and Set session variables.
+	$chkuname = $_POST["username"];
+	$chkpass = $_POST["pwd"];
+
+	//Do Authentication
+	$sql="SELECT * from customers where name='$chkuname' AND password='$chkpass'";
+	$result = $conn->query($sql);
+	if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+        $_SESSION["mac"] = $mac;
+  		$_SESSION["uname"]= $chkuname;
+    }
+	}else{
+		//if Failes
+		$errors = '1';
+		echo '<script type="text/javascript">
+	    	window.location = "login.php"
+		</script>';
+	}
+
+}
+else{
+	if(isset($_SESSION["mac"]) && isset($_SESSION["uname"])) {
+		echo '<script type="text/javascript">
+		    	window.location = "index.php"
+			</script>';
+	}
+	//GET METHOD. Create a Token ID for Post Procession
+	$sql="SELECT id FROM customers";
+	if ($result=mysqli_query($conn,$sql))
+	  $rowcount=mysqli_num_rows($result);
+	$rowcount++;
+	$genusername = 'CIP00'.$rowcount;
+	$genpass = bin2hex(openssl_random_pseudo_bytes(3));
+
+	$sql = "INSERT INTO customers (name, password, checkin) VALUES ('$genusername', '$genpass', '0')";
+	$result = $conn->query($sql);
+}
+?>
 <html class="fixed">
 	<head>
 
@@ -38,6 +100,23 @@
 		<!-- start: page -->
 		<section class="body-sign">
 			<div class="center-sign">
+				<?php
+					if($errors != NULL)
+					{
+						if($errors == '1'){
+							echo "<div class=\"alert alert-danger\">
+		  					<strong>Error!</strong> Wrong Username and Password.!!
+							</div>";
+						}
+						else if($errors == '2'){
+							die("<div class=\"alert alert-danger\">
+						  	<strong>Failure: </strong>" . $conn->connect_error . "!!!</div>");
+						    echo '<script type="text/javascript">
+						         window.location = "/php/index.php"
+						    </script>';
+						}
+					}
+				?>
 				<a href="/" class="logo pull-left">
 					<img src="#" height="54" alt="CIP Project" />
 				</a>
@@ -47,7 +126,7 @@
 						<h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i> Sign In</h2>
 					</div>
 					<div class="panel-body">
-						<form action="index.html" method="post">
+						<form action="login.php" method="post">
 							<div class="form-group mb-lg">
 								<label>Username</label>
 								<div class="input-group input-group-icon">
@@ -93,7 +172,7 @@
 							</span>
 
 							<div class="mb-xs text-center">
-								<p class="text-center">Token Username : and Password: </p>
+								<p class="text-center">Token Username :<?php echo $genusername; ?> and Password: <?php echo $genpass ?></p>
 							</div>
 
 							<p class="text-center"><a href="adminlogin.php">Admin Login </a></p>
