@@ -3,8 +3,7 @@
 	  
 session_start();
 $ip=$_SERVER['REMOTE_ADDR'];
-$mac = shell_exec('arp '.$ip.' | awk \'{print $4}\'');
-$errors = NULL;
+//$mac = shell_exec('arp '.$ip.' | awk \'{print $4}\'');
 
 //Server Starting connection.
 $servername = "localhost";
@@ -31,8 +30,11 @@ if(isset($_POST["username"])&& isset($_POST["pwd"])){
 	if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
-        $_SESSION["mac"] = $mac;
+        $_SESSION["ip"] = $ip;
   		$_SESSION["uname"]= $chkuname;
+  		echo '<script type="text/javascript">
+	    	window.location = "index.php"
+		</script>';
     }
 	}else{
 		//if Failes
@@ -44,7 +46,7 @@ if(isset($_POST["username"])&& isset($_POST["pwd"])){
 
 }
 else{
-	if(isset($_SESSION["mac"]) && isset($_SESSION["uname"])) {
+	if(isset($_SESSION["ip"]) && isset($_SESSION["uname"])) {
 		echo '<script type="text/javascript">
 		    	window.location = "index.php"
 			</script>';
@@ -101,7 +103,7 @@ else{
 		<section class="body-sign">
 			<div class="center-sign">
 				<?php
-					if($errors != NULL)
+					if(isset($errors))
 					{
 						if($errors == '1'){
 							echo "<div class=\"alert alert-danger\">
@@ -172,7 +174,7 @@ else{
 							</span>
 
 							<div class="mb-xs text-center">
-								<p class="text-center">Token Username :<?php echo $genusername; ?> and Password: <?php echo $genpass ?></p>
+								<p class="text-center">Token Username :<?php echo $genusername; ?> and Password: <?php echo $genpass; echo " IP: ".$ip; ?></p>
 							</div>
 
 							<p class="text-center"><a href="adminlogin.php">Admin Login </a></p>
