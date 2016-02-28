@@ -1,3 +1,13 @@
+<?php
+session_start();
+$ip=$_SERVER['REMOTE_ADDR'];
+//      $mac = shell_exec('arp '.$ip.' | awk \'{print $4}\'');
+      if(!isset($_SESSION["ip"]) && !isset($_SESSION["uname"])) {
+	      echo '<script type="text/javascript">
+	                 window.location = "login.php"
+	            </script>';
+      }
+?>
 <!doctype html>
 <html class="fixed">
 	<head>
@@ -38,6 +48,25 @@
 
 		<!-- Head Libs -->
 		<script src="assets/vendor/modernizr/modernizr.js"></script>
+		<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js\"></script>
+		<script>
+			function plus()
+			{
+			  	var table = document.getElementById("example");
+				if (table != null) {
+				    for (var i = 0; i < table.rows.length; i++) {
+				        
+				        table.rows[i].onclick = function () {
+				            tableText(this);
+				        };
+				    }
+				}
+			}
+			function tableText(tableCell) {
+			    alert(tableCell.innerHTML);
+			}
+			  
+  			</script>
 
 	</head>
 	<body>
@@ -62,7 +91,7 @@
 								<img src="assets/images/!logged-user.jpg" alt="Joseph Doe" class="img-circle" data-lock-picture="assets/images/!logged-user.jpg" />
 							</figure>
 							<div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
-								<span class="name">USERNAME[SESSION]</span>
+								<span class="name">Welcome[<b><?php echo $_SESSION["uname"] ?></b>]</span>
 								<span class="role">User</span>
 							</div>
 			
@@ -150,34 +179,61 @@
 									</header>
 									<div class="panel-body">
 										<div class="table-responsive">
-											<table class="table table-bordered mb-none">
+											<table class="table table-bordered mb-none" id="example">
 												<thead>
 													<tr>
-														<th>S.no</th>
-														<th>Name</th>
-														<th>Price</th>
-														<th>Quantity</th>
+														<th>Food Name</th>
+												        <th>Time Taken</th>
+												        <th>Cost(per piece)</th>
+												        <th>Minus</th>
+												        <th>No. of items</th>		     			      
+												        <th>Add</th>
 													</tr>
 												</thead>
 												<tbody>
-													<tr>
-														<td>1</td>
-														<td>Mark</td>
-														<td>Otto</td>
-														<td>@mdo</td>
-													</tr>
-													<tr>
-														<td>2</td>
-														<td>Jacob</td>
-														<td>Thornton</td>
-														<td>@fat</td>
-													</tr>
-													<tr>
-														<td>3</td>
-														<td>Larry</td>
-														<td>the Bird</td>
-														<td>@twitter</td>
-													</tr>
+													<?php
+													$servername = "localhost";
+													$username = "root";
+													$password = "root";
+													$dbname = "cipproject";
+
+													// Create connection
+													$conn = new mysqli($servername, $username, $password, $dbname);
+													// Check connection
+													if ($conn->connect_error) {
+													     $errors='2';
+													} 
+													$sql = "SELECT * FROM menucard";
+													$result = $conn->query($sql);
+													while($row = $result->fetch_assoc()) {
+														if(($row["choice"] == 0))
+												     	{
+												     		echo "
+												     				<tr>
+															        <td>".$row["food"]."</td>
+															        <td>".$row["time"]."</td>
+															        <td>".$row["cost"]."</td>
+														    		<td><button type=\"button\" class=\"btn btn-danger disabled\" field=\"quantity\">-</button></td>
+														    		<td><input type=\"text\" class=\"form-control\" name=\"quantity\" value=\"0\" id=\"qty\" /></td>
+														    		<td><button type=\"button\" class=\"btn btn-success disabled\" field=\"quantity\" >+</button></td>
+												        			</tr>
+												         ";
+												     	}
+												     	else
+												     	{
+												         echo "
+												         			<tr onclick=\"plus()\">
+															        <td>".$row["food"]."</td>
+															        <td>".$row["time"]."</td>
+															        <td>".$row["cost"]."</td>
+														    		<td><button type=\"button\" class=\"btn btn-danger\" field=\"quantity\">-</button></td>
+														    		<td><input type=\"text\" class=\"form-control\" name=\"quantity\" value=\"0\" id=\"qty\" /></td>
+														    		<td><button type=\"button\" class=\"btn btn-success\" field=\"quantity\">+</button></td>
+															      	</tr>
+												         ";
+												         }
+													}
+													?>
 												</tbody>
 											</table>
 										</div>

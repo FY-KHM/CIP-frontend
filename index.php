@@ -70,13 +70,14 @@ session_start();
 					<div id="userbox" class="userbox">
 						<a href="#" data-toggle="dropdown">
 							<figure class="profile-picture">
-								<img src="assets/images/!logged-user.jpg" alt="Joseph Doe" class="img-circle" data-lock-picture="assets/images/!logged-user.jpg" />
+								<img src="assets/images/!logged-user.jpg" alt=<?php echo $_SESSION["uname"] ?> class="img-circle" data-lock-picture="assets/images/!logged-user.jpg" />
 							</figure>
-							<div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
-								<span class="name">USERNAME[SESSION]</span>
+							<div class="profile-info" data-lock-name=<?php echo $_SESSION["uname"] ?> data-lock-email=<?php echo $_SESSION["uname"] ?>>
+								<span class="name">Welcome[<b><?php echo $_SESSION["uname"] ?></b>]</span>
 								<span class="role">User</span>
+								
 							</div>
-			
+							
 							<i class="fa custom-caret"></i>
 						</a>
 			
@@ -84,7 +85,7 @@ session_start();
 							<ul class="list-unstyled">
 								<li class="divider"></li>
 								<li>
-									<a role="menuitem" tabindex="-1" href="#" data-lock-screen="true"><i class="fa fa-lock"></i> Lock Screen</a>
+									<a role="menuitem" tabindex="-1" href="#" data-lock-screen="true"><i class="fa fa-lock"></i> Change Username</a>
 								</li>
 								<li>
 									<a role="menuitem" tabindex="-1" href="logout.php"><i class="fa fa-power-off"></i> Logout</a>
@@ -168,9 +169,9 @@ session_start();
 										<div class="col-lg-4 text-center">
 											<h2 class="panel-title mt-md">Your Serving</h2>
 												<div class="circular-bar">
-													<div class="circular-bar-chart" data-percent="60" data-plugin-options='{ "barColor": "#2BAAB1", "delay": 600 }'>
+													<div class="circular-bar-chart" data-percent="75" data-plugin-options='{ "barColor": "#2BAAB1", "delay": 600 }'>
 														<strong>Serving queue</strong>
-														<label><span class="percent">60</span>%</label>
+														<label><span class="percent">75</span>%</label>
 													</div>
 												</div>
 										</div>
