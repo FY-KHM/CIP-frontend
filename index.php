@@ -9,6 +9,26 @@ session_start();
 	                 window.location = "login.php"
 	            </script>';
       }
+      $servername = "localhost";
+		$username = "root";
+		$password = "root";
+		$dbname = "cipproject";
+		$user=$_SESSION["uname"];
+
+
+		// Create connection
+		$conn = new mysqli($servername, $username, $password, $dbname);
+		// Check connection
+		if ($conn->connect_error) {
+		     $errors='2';
+		}
+		//Get count of previous orders!!!
+		$sql = "SELECT * FROM orders where username='$user'";
+		$result = $conn->query($sql); 
+		$id=0;
+		while($row = $result->fetch_assoc()) {
+	         $id++;
+	    }
 ?>
 <html class="fixed">
 	<head>
@@ -123,7 +143,7 @@ session_start();
 									</li>
 									<li>
 										<a href="previousorder.php">
-											<span class="pull-right label label-primary">5</span>
+											<span class="pull-right label label-primary"><?php echo $id;?></span>
 											<i class="fa fa-history" aria-hidden="true"></i>
 											<span>Previous Orders</span>
 										</a>
@@ -194,7 +214,7 @@ session_start();
 													<div class="summary">
 														<h4 class="title">Previous Orders</h4>
 														<div class="info">
-															<strong class="amount">5</strong>
+															<strong class="amount"><?php echo $id;?></strong>
 														</div>
 													</div>
 													<div class="summary-footer">

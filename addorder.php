@@ -7,6 +7,27 @@ $ip=$_SERVER['REMOTE_ADDR'];
 	                 window.location = "login.php"
 	            </script>';
       }
+	  $servername = "localhost";
+	  $username = "root";
+	  $password = "root";
+	  $dbname = "cipproject";
+	  $user=$_SESSION["uname"];
+
+	// Create connection
+	$conn = new mysqli($servername, $username, $password, $dbname);
+	// Check connection
+	if ($conn->connect_error) {
+	     $errors='2';
+	} 
+
+	//Previous order count...
+	$sql1 = "SELECT * FROM orders where username='$user'";
+		$result1 = $conn->query($sql1); 
+		$id=0;
+		while($row = $result1->fetch_assoc()) {
+	         $id++;
+	    }
+
 ?>
 <!doctype html>
 <html class="fixed">
@@ -66,7 +87,33 @@ $ip=$_SERVER['REMOTE_ADDR'];
 		        	});
 		    	});
   			</script>
+  			<script>
+  				function orderitems()
+  				{
+  					//Onclick of order button...
+  					var myTable = document.getElementById('example').tBodies[0];
+  					var cellname="",quantity="";
+		         // first loop for each row	
+		        for (var r=0, n = myTable.rows.length; r < n; r++) {
+		                       // this loop is getting each colomn/cells
+					for (var c = 0, m = myTable.rows[r].cells.length; c < m; c++) {
+		              
+					   if(myTable.rows[r].cells[c].childNodes[0].value){
+						   	// get cell names
+							cellname += myTable.rows[r].cells[0].innerHTML + " ";
+							//alert(cellname); 
+							
+							// get Quantity in each text boxes
+					   		quantity += myTable.rows[r].cells[c].childNodes[0].value + " ";
+					   		//alert(quantity);
+					   		//Data to be entered into database for further reference by admin and previous orders.
+					   		window.location.href = "/cip/insertorder.php?food=" + cellname + "&quantity=" + quantity;
 
+			   }
+            }
+        }
+  				}
+  			</script>
 
 	</head>
 	<body>
@@ -140,7 +187,7 @@ $ip=$_SERVER['REMOTE_ADDR'];
 									</li>
 									<li>
 										<a href="previousorder.php">
-											<span class="pull-right label label-primary">5</span>
+											<span class="pull-right label label-primary"><?php echo $id;?></span>
 											<i class="fa fa-history" aria-hidden="true"></i>
 											<span>Previous Orders</span>
 										</a>
@@ -190,25 +237,15 @@ $ip=$_SERVER['REMOTE_ADDR'];
 												        <th>Add</th>
 													</tr>
 												</thead>
+												<tbody>
 													<?php
-													$servername = "localhost";
-													$username = "root";
-													$password = "root";
-													$dbname = "cipproject";
-
-													// Create connection
-													$conn = new mysqli($servername, $username, $password, $dbname);
-													// Check connection
-													if ($conn->connect_error) {
-													     $errors='2';
-													} 
 													$sql = "SELECT * FROM menucard";
 													$result = $conn->query($sql);
 													while($row = $result->fetch_assoc()) {
 														if(($row["choice"] == 0))
 												     	{
 												     		echo "
-												     				<tbody>
+												     				
 												     				<tr>
 															        <td>".$row["food"]."</td>
 															        <td>".$row["time"]."</td>
@@ -217,13 +254,11 @@ $ip=$_SERVER['REMOTE_ADDR'];
 														    		<td><input type=\"text\" class=\"form-control\" name=\"quantity\" value=\"0\" id=\"qty\" /></td>
 														    		<td><button type=\"button\" class=\"btn btn-success disabled\" field=\"quantity\" >+</button></td>
 												        			</tr>
-												        			</tbody>
 												         ";
 												     	}
 												     	else
 												     	{
 												         echo "
-												         			<tbody>
 												         			<tr >
 															        <td>".$row["food"]."</td>
 															        <td>".$row["time"]."</td>
@@ -232,7 +267,7 @@ $ip=$_SERVER['REMOTE_ADDR'];
 														    		<td><input type=\"text\" class=\"form-control\" name=\"quantity\" value=\"0\" id=\"qty\" /></td>
 														    		<td><button type=\"button\" class=\"btn btn-success\" field=\"quantity\" onclick=\"f1()\">+</button></td>
 															      	</tr>
-															      	</tbody>
+															      	
 												         ";
 												         }
 													}
@@ -247,12 +282,13 @@ $ip=$_SERVER['REMOTE_ADDR'];
 					<div class="row">
 					</br>
 						<div class="col-md-3">
-							<button type="button" class="mb-xs mt-xs mr-xs btn btn-primary btn-block" >
+							<button type="button" class="mb-xs mt-xs mr-xs btn btn-primary btn-block" name="order" onclick="orderitems()">
 							<i class="fa fa-spoon"></i> Order
 							</button>
+					
 						</div>
 						<div class="col-md-3">
-							<button type="button" class="mb-xs mt-xs mr-xs btn btn-danger btn-block">
+							<button type="button" onclick="location.href='index.php'" class="mb-xs mt-xs mr-xs btn btn-danger btn-block" name="cancel" onclick="goBack()">
 							<i class="fa fa-times"></i> Cancel
 							</button>
 						</div>

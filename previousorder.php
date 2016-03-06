@@ -1,3 +1,26 @@
+<?php
+session_start();
+$ip=$_SERVER['REMOTE_ADDR'];
+//      $mac = shell_exec('arp '.$ip.' | awk \'{print $4}\'');
+      if(!isset($_SESSION["ip"]) && !isset($_SESSION["uname"])) {
+	      echo '<script type="text/javascript">
+	                 window.location = "login.php"
+	            </script>';
+      }
+	  $servername = "localhost";
+	  $username = "root";
+	  $password = "root";
+	  $dbname = "cipproject";
+	  $user=$_SESSION["uname"];
+
+	// Create connection
+	$conn = new mysqli($servername, $username, $password, $dbname);
+	// Check connection
+	if ($conn->connect_error) {
+	     $errors='2';
+	} 
+?>
+
 <!doctype html>
 <html class="fixed">
 	<head>
@@ -154,30 +177,27 @@
 												<thead>
 													<tr>
 														<th>S.no</th>
-														<th>Items</th>
-														<th>Date</th>
-														<th>Price</th>
+														<th>Food</th>
+														<th>Quantity</th>
 													</tr>
 												</thead>
 												<tbody>
-													<tr>
-														<td>1</td>
-														<td>Mark</td>
-														<td>Otto</td>
-														<td>@mdo</td>
-													</tr>
-													<tr>
-														<td>2</td>
-														<td>Jacob</td>
-														<td>Thornton</td>
-														<td>@fat</td>
-													</tr>
-													<tr>
-														<td>3</td>
-														<td>Larry</td>
-														<td>the Bird</td>
-														<td>@twitter</td>
-													</tr>
+													<?php
+													//Display previous orders..!!!!
+													$sql = "SELECT * FROM orders where username='$user'";
+													$result = $conn->query($sql);
+													$id=1;
+													while($row = $result->fetch_assoc()) {												     		
+														echo "
+												     				<tr>
+															        <td>".$id."</td>
+															        <td>".$row["food"]."</td>
+															        <td>".$row["quantity"]."</td>
+												        			</tr>
+												         ";
+												         $id++;
+												    }
+													?>
 												</tbody>
 											</table>
 										</div>
