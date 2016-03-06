@@ -39,7 +39,7 @@
 		<section class="body-sign">
 			<div class="center-sign">
 				<a href="/" class="logo pull-left">
-					<img src="#" height="54" alt="CIP Project" />
+					<img src="assets/images/annauniv.png" height="54" alt="CIP Project" />
 				</a>
 
 				<div class="panel panel-sign">

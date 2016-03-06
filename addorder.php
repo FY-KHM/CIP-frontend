@@ -48,35 +48,35 @@ $ip=$_SERVER['REMOTE_ADDR'];
 
 		<!-- Head Libs -->
 		<script src="assets/vendor/modernizr/modernizr.js"></script>
-		<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js\"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 		<script>
-			function plus()
-			{
-			  	var table = document.getElementById("example");
-				if (table != null) {
-				    for (var i = 0; i < table.rows.length; i++) {
-				        
-				        table.rows[i].onclick = function () {
-				            tableText(this);
-				        };
-				    }
-				}
-			}
-			function tableText(tableCell) {
-			    alert(tableCell.innerHTML);
-			}
-			  
+			  $(document).ready(function(){
+		        $('#example tbody').on( 'click', 'td', function () {
+		            var data=$(this).closest('tr').find('#qty').val();
+		            var x=$('#example thead tr th').eq($(this).index()).html().trim();
+		           	if(x=="Minus")
+		           	{
+		            	if(data==0)
+		            		$(this).closest('tr').find('#qty').val(data);
+		            	else
+		            		$(this).closest('tr').find('#qty').val(--data);
+		            }
+		            else if(x=="Add")
+		            	$(this).closest('tr').find('#qty').val(++data);
+		        	});
+		    	});
   			</script>
+
 
 	</head>
 	<body>
 		<section class="body">
-
+				
 			<!-- start: header -->
 			<header class="header">
 				<div class="logo-container">
-					<a href="../" class="logo">
-						<img src="#" height="35" alt="CIP Project" />
+					<a href="#" class="logo">
+						<img src="assets/images/annauniv.png" height="35" alt="CIP Project" />
 					</a>
 					<div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
 						<i class="fa fa-bars" aria-label="Toggle sidebar"></i>
@@ -190,7 +190,6 @@ $ip=$_SERVER['REMOTE_ADDR'];
 												        <th>Add</th>
 													</tr>
 												</thead>
-												<tbody>
 													<?php
 													$servername = "localhost";
 													$username = "root";
@@ -209,6 +208,7 @@ $ip=$_SERVER['REMOTE_ADDR'];
 														if(($row["choice"] == 0))
 												     	{
 												     		echo "
+												     				<tbody>
 												     				<tr>
 															        <td>".$row["food"]."</td>
 															        <td>".$row["time"]."</td>
@@ -217,19 +217,22 @@ $ip=$_SERVER['REMOTE_ADDR'];
 														    		<td><input type=\"text\" class=\"form-control\" name=\"quantity\" value=\"0\" id=\"qty\" /></td>
 														    		<td><button type=\"button\" class=\"btn btn-success disabled\" field=\"quantity\" >+</button></td>
 												        			</tr>
+												        			</tbody>
 												         ";
 												     	}
 												     	else
 												     	{
 												         echo "
-												         			<tr onclick=\"plus()\">
+												         			<tbody>
+												         			<tr >
 															        <td>".$row["food"]."</td>
 															        <td>".$row["time"]."</td>
 															        <td>".$row["cost"]."</td>
 														    		<td><button type=\"button\" class=\"btn btn-danger\" field=\"quantity\">-</button></td>
 														    		<td><input type=\"text\" class=\"form-control\" name=\"quantity\" value=\"0\" id=\"qty\" /></td>
-														    		<td><button type=\"button\" class=\"btn btn-success\" field=\"quantity\">+</button></td>
+														    		<td><button type=\"button\" class=\"btn btn-success\" field=\"quantity\" onclick=\"f1()\">+</button></td>
 															      	</tr>
+															      	</tbody>
 												         ";
 												         }
 													}
@@ -244,7 +247,7 @@ $ip=$_SERVER['REMOTE_ADDR'];
 					<div class="row">
 					</br>
 						<div class="col-md-3">
-							<button type="button" class="mb-xs mt-xs mr-xs btn btn-primary btn-block">
+							<button type="button" class="mb-xs mt-xs mr-xs btn btn-primary btn-block" >
 							<i class="fa fa-spoon"></i> Order
 							</button>
 						</div>
