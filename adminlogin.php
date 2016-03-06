@@ -1,3 +1,47 @@
+
+<?php
+	  
+session_start();
+$ip=$_SERVER['REMOTE_ADDR'];
+//$mac = shell_exec('arp '.$ip.' | awk \'{print $4}\'');
+
+//Server Starting connection.
+$servername = "localhost";
+$username = "root";
+$password = "root";
+$dbname = "cipproject";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+     $errors='2';
+} 
+
+if(isset($_POST["username"])&& isset($_POST["pwd"])){
+	
+	//POST METHOD. Check Authentication and Set session variables.
+	$chkuname = $_POST["username"];
+	$chkpass = $_POST["pwd"];
+
+	//Do Authentication
+	$sql="SELECT * from adminlogin where username='$chkuname' AND password='$chkpass'";
+	$result = $conn->query($sql);
+	if ($result->num_rows > 0) {
+  		$_SESSION["auname"]= $chkuname;
+  		echo '<script type="text/javascript">
+	    	window.location = "adminpanel.php"
+		</script>';
+	}else{
+		//if Failes
+		$errors = '1';
+		echo '<script type="text/javascript">
+	    	window.location = "adminlogin.php"
+		</script>';
+	}
+}
+?>
+
 <!doctype html>
 <html class="fixed">
 	<head>
@@ -47,7 +91,7 @@
 						<h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i>ADMIN Sign In</h2>
 					</div>
 					<div class="panel-body">
-						<form action="index.html" method="post">
+						<form action="adminlogin.php" method="post">
 							<div class="form-group mb-lg">
 								<label>Username</label>
 								<div class="input-group input-group-icon">
