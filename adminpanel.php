@@ -4,9 +4,6 @@ session_start();
 $ip=$_SERVER['REMOTE_ADDR'];
 //      $mac = shell_exec('arp '.$ip.' | awk \'{print $4}\'');
       if(!isset($_SESSION["ip"]) && !isset($_SESSION["uname"])) {
-	      echo '<script type="text/javascript">
-	                 window.location = "adminlogin.php"
-	            </script>';
       }
 	  $servername = "localhost";
 	  $username = "root";
@@ -50,6 +47,7 @@ $ip=$_SERVER['REMOTE_ADDR'];
 		<meta name="keywords" content="HTML5 Admin Template" />
 		<meta name="description" content="Porto Admin - Responsive HTML5 Template">
 		<meta name="author" content="okler.net">
+		<meta http-equiv="refresh" content="20">
 
 		<!-- Mobile Metas -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -90,7 +88,7 @@ $ip=$_SERVER['REMOTE_ADDR'];
 					<a href="../" class="logo">
 						<img src="assets/images/annauniv.png" height="35" alt="CIP Project" />
 					</a>
-					<div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
+					<div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened" aria-hidden="true">
 						<i class="fa fa-bars" aria-label="Toggle sidebar"></i>
 					</div>
 				</div>
@@ -103,7 +101,7 @@ $ip=$_SERVER['REMOTE_ADDR'];
 								<img src="assets/images/!logged-user.jpg" alt="Joseph Doe" class="img-circle" data-lock-picture="assets/images/!logged-user.jpg" />
 							</figure>
 							<div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
-								<span class="name">USERNAME[SESSION]</span>
+								<span class="name">Welcome [ADMIN]</span>
 								<span class="role">User</span>
 							</div>
 			
@@ -136,7 +134,7 @@ $ip=$_SERVER['REMOTE_ADDR'];
 							Navigation
 						</div>
 						<div class="sidebar-toggle hidden-xs" data-toggle-class="sidebar-left-collapsed" data-target="html" data-fire-event="sidebar-left-toggle">
-							<i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+							<i class="fa fa-bars" aria-label="Toggle sidebar" ></i>
 						</div>
 					</div>
 				
