@@ -19,6 +19,12 @@ $ip=$_SERVER['REMOTE_ADDR'];
 	if ($conn->connect_error) {
 	     $errors='2';
 	} 
+	$sql1 = "SELECT * FROM orders where username='$user'";
+		$result1 = $conn->query($sql1); 
+		$id1=0;
+		while($row = $result1->fetch_assoc()) {
+	         $id1++;
+	    }
 ?>
 
 <!doctype html>
@@ -134,7 +140,7 @@ $ip=$_SERVER['REMOTE_ADDR'];
 									</li>
 									<li>
 										<a href="previousorder.php">
-											<span class="pull-right label label-primary">5</span>
+											<span class="pull-right label label-primary"><?php echo $id1;?></span>
 											<i class="fa fa-history" aria-hidden="true"></i>
 											<span>Previous Orders</span>
 										</a>
