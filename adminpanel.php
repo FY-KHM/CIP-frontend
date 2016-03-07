@@ -1,3 +1,41 @@
+
+<?php
+session_start();
+$ip=$_SERVER['REMOTE_ADDR'];
+//      $mac = shell_exec('arp '.$ip.' | awk \'{print $4}\'');
+      if(!isset($_SESSION["ip"]) && !isset($_SESSION["uname"])) {
+      }
+	  $servername = "localhost";
+	  $username = "root";
+	  $password = "root";
+	  $dbname = "cipproject";
+	  $user=$_SESSION["uname"];
+
+	// Create connection
+	$conn = new mysqli($servername, $username, $password, $dbname);
+	// Check connection
+	if ($conn->connect_error) {
+	     $errors='2';
+	} 
+
+	//Previous order count...
+	$sql1 = "SELECT * FROM orders";
+		$result1 = $conn->query($sql1); 
+		$id=0;
+		while($row = $result1->fetch_assoc()) {
+	         $id++;
+	    }
+
+
+	    $sql2 = "SELECT DISTINCT username FROM orders";
+		$result2 = $conn->query($sql2); 
+		$id2=0;
+		while($row = $result2->fetch_assoc()) {
+	         $id2++;
+	    }
+
+?>
+
 <!doctype html>
 <html class="fixed">
 	<head>
@@ -9,6 +47,7 @@
 		<meta name="keywords" content="HTML5 Admin Template" />
 		<meta name="description" content="Porto Admin - Responsive HTML5 Template">
 		<meta name="author" content="okler.net">
+		<meta http-equiv="refresh" content="20">
 
 		<!-- Mobile Metas -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -47,9 +86,9 @@
 			<header class="header">
 				<div class="logo-container">
 					<a href="../" class="logo">
-						<img src="#" height="35" alt="CIP Project" />
+						<img src="assets/images/annauniv.png" height="35" alt="CIP Project" />
 					</a>
-					<div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
+					<div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened" aria-hidden="true">
 						<i class="fa fa-bars" aria-label="Toggle sidebar"></i>
 					</div>
 				</div>
@@ -62,7 +101,7 @@
 								<img src="assets/images/!logged-user.jpg" alt="Joseph Doe" class="img-circle" data-lock-picture="assets/images/!logged-user.jpg" />
 							</figure>
 							<div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
-								<span class="name">USERNAME[SESSION]</span>
+								<span class="name">Welcome [ADMIN]</span>
 								<span class="role">User</span>
 							</div>
 			
@@ -95,7 +134,7 @@
 							Navigation
 						</div>
 						<div class="sidebar-toggle hidden-xs" data-toggle-class="sidebar-left-collapsed" data-target="html" data-fire-event="sidebar-left-toggle">
-							<i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+							<i class="fa fa-bars" aria-label="Toggle sidebar" ></i>
 						</div>
 					</div>
 				
@@ -489,159 +528,8 @@
 					<!-- start: page -->
 					<div class="row">
 						<div class="col-md-6 col-lg-12 col-xl-6">
-							<section class="panel">
-								<div class="panel-body">
-									<div class="row">
-										<div class="col-lg-8">
-											<div class="chart-data-selector" id="salesSelectorWrapper">
-												<h2>
-													Sales:
-													<strong>
-														<select class="form-control" id="salesSelector">
-															<option value="Porto Admin" selected>Porto Admin</option>
-															<option value="Porto Drupal" >Porto Drupal</option>
-															<option value="Porto Wordpress" >Porto Wordpress</option>
-														</select>
-													</strong>
-												</h2>
-
-												<div id="salesSelectorItems" class="chart-data-selector-items mt-sm">
-													<!-- Flot: Sales Porto Admin -->
-													<div class="chart chart-sm" data-sales-rel="Porto Admin" id="flotDashSales1" class="chart-active"></div>
-													<script>
-
-														var flotDashSales1Data = [{
-														    data: [
-														        ["Jan", 140],
-														        ["Feb", 240],
-														        ["Mar", 190],
-														        ["Apr", 140],
-														        ["May", 180],
-														        ["Jun", 320],
-														        ["Jul", 270],
-														        ["Aug", 180]
-														    ],
-														    color: "#0088cc"
-														}];
-
-														// See: assets/javascripts/dashboard/examples.dashboard.js for more settings.
-
-													</script>
-
-													<!-- Flot: Sales Porto Drupal -->
-													<div class="chart chart-sm" data-sales-rel="Porto Drupal" id="flotDashSales2" class="chart-hidden"></div>
-													<script>
-
-														var flotDashSales2Data = [{
-														    data: [
-														        ["Jan", 240],
-														        ["Feb", 240],
-														        ["Mar", 290],
-														        ["Apr", 540],
-														        ["May", 480],
-														        ["Jun", 220],
-														        ["Jul", 170],
-														        ["Aug", 190]
-														    ],
-														    color: "#2baab1"
-														}];
-
-														// See: assets/javascripts/dashboard/examples.dashboard.js for more settings.
-
-													</script>
-
-													<!-- Flot: Sales Porto Wordpress -->
-													<div class="chart chart-sm" data-sales-rel="Porto Wordpress" id="flotDashSales3" class="chart-hidden"></div>
-													<script>
-
-														var flotDashSales3Data = [{
-														    data: [
-														        ["Jan", 840],
-														        ["Feb", 740],
-														        ["Mar", 690],
-														        ["Apr", 940],
-														        ["May", 1180],
-														        ["Jun", 820],
-														        ["Jul", 570],
-														        ["Aug", 780]
-														    ],
-														    color: "#734ba9"
-														}];
-
-														// See: assets/javascripts/dashboard/examples.dashboard.js for more settings.
-
-													</script>
-												</div>
-
-											</div>
-										</div>
-										<div class="col-lg-4 text-center">
-											<h2 class="panel-title mt-md">Sales Goal</h2>
-											<div class="liquid-meter-wrapper liquid-meter-sm mt-lg">
-												<div class="liquid-meter">
-													<meter min="0" max="100" value="35" id="meterSales"></meter>
-												</div>
-												<div class="liquid-meter-selector" id="meterSalesSel">
-													<a href="#" data-val="35" class="active">Monthly Goal</a>
-													<a href="#" data-val="28">Annual Goal</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</section>
-						</div>
-						<div class="col-md-6 col-lg-12 col-xl-6">
 							<div class="row">
-								<div class="col-md-12 col-lg-6 col-xl-6">
-									<section class="panel panel-featured-left panel-featured-primary">
-										<div class="panel-body">
-											<div class="widget-summary">
-												<div class="widget-summary-col widget-summary-col-icon">
-													<div class="summary-icon bg-primary">
-														<i class="fa fa-life-ring"></i>
-													</div>
-												</div>
-												<div class="widget-summary-col">
-													<div class="summary">
-														<h4 class="title">Support Questions</h4>
-														<div class="info">
-															<strong class="amount">1281</strong>
-															<span class="text-primary">(14 unread)</span>
-														</div>
-													</div>
-													<div class="summary-footer">
-														<a class="text-muted text-uppercase">(view all)</a>
-													</div>
-												</div>
-											</div>
-										</div>
-									</section>
-								</div>
-								<div class="col-md-12 col-lg-6 col-xl-6">
-									<section class="panel panel-featured-left panel-featured-secondary">
-										<div class="panel-body">
-											<div class="widget-summary">
-												<div class="widget-summary-col widget-summary-col-icon">
-													<div class="summary-icon bg-secondary">
-														<i class="fa fa-usd"></i>
-													</div>
-												</div>
-												<div class="widget-summary-col">
-													<div class="summary">
-														<h4 class="title">Total Profit</h4>
-														<div class="info">
-															<strong class="amount">$ 14,890.30</strong>
-														</div>
-													</div>
-													<div class="summary-footer">
-														<a class="text-muted text-uppercase">(withdraw)</a>
-													</div>
-												</div>
-											</div>
-										</div>
-									</section>
-								</div>
+								
 								<div class="col-md-12 col-lg-6 col-xl-6">
 									<section class="panel panel-featured-left panel-featured-tertiary">
 										<div class="panel-body">
@@ -655,7 +543,7 @@
 													<div class="summary">
 														<h4 class="title">Today's Orders</h4>
 														<div class="info">
-															<strong class="amount">38</strong>
+															<strong class="amount"><?php echo $id?></strong>
 														</div>
 													</div>
 													<div class="summary-footer">
@@ -679,7 +567,7 @@
 													<div class="summary">
 														<h4 class="title">Today's Visitors</h4>
 														<div class="info">
-															<strong class="amount">3765</strong>
+															<strong class="amount"><?php echo $id2?></strong>
 														</div>
 													</div>
 													<div class="summary-footer">
@@ -695,549 +583,65 @@
 					</div>
 
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<section class="panel">
-								<header class="panel-heading">
-									<div class="panel-actions">
-										<a href="#" class="fa fa-caret-down"></a>
-										<a href="#" class="fa fa-times"></a>
-									</div>
-
-									<h2 class="panel-title">Best Seller</h2>
-									<p class="panel-subtitle">Customize the graphs as much as you want, there are so many options and features to display information using Porto Admin Template.</p>
-								</header>
-								<div class="panel-body">
-
-									<!-- Flot: Basic -->
-									<div class="chart chart-md" id="flotDashBasic"></div>
-									<script>
-
-										var flotDashBasicData = [{
-											data: [
-												[0, 170],
-												[1, 169],
-												[2, 173],
-												[3, 188],
-												[4, 147],
-												[5, 113],
-												[6, 128],
-												[7, 169],
-												[8, 173],
-												[9, 128],
-												[10, 128]
-											],
-											label: "Series 1",
-											color: "#0088cc"
-										}, {
-											data: [
-												[0, 115],
-												[1, 124],
-												[2, 114],
-												[3, 121],
-												[4, 115],
-												[5, 83],
-												[6, 102],
-												[7, 148],
-												[8, 147],
-												[9, 103],
-												[10, 113]
-											],
-											label: "Series 2",
-											color: "#2baab1"
-										}, {
-											data: [
-												[0, 70],
-												[1, 69],
-												[2, 73],
-												[3, 88],
-												[4, 47],
-												[5, 13],
-												[6, 28],
-												[7, 69],
-												[8, 73],
-												[9, 28],
-												[10, 28]
-											],
-											label: "Series 3",
-											color: "#734ba9"
-										}];
-
-										// See: assets/javascripts/dashboard/examples.dashboard.js for more settings.
-
-									</script>
-
-								</div>
-							</section>
-						</div>
-						<div class="col-md-6">
-							<section class="panel">
-								<header class="panel-heading">
-									<div class="panel-actions">
-										<a href="#" class="fa fa-caret-down"></a>
-										<a href="#" class="fa fa-times"></a>
-									</div>
-									<h2 class="panel-title">Server Usage</h2>
-									<p class="panel-subtitle">It's easy to create custom graphs on Porto Admin Template, there are several graph types that you can use, such as lines, bars, pie charts, etc...</p>
-								</header>
-								<div class="panel-body">
-
-									<!-- Flot: Curves -->
-									<div class="chart chart-md" id="flotDashRealTime"></div>
-
-								</div>
-							</section>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-xl-3 col-lg-6">
-							<section class="panel panel-transparent">
-								<header class="panel-heading">
-									<div class="panel-actions">
-										<a href="#" class="fa fa-caret-down"></a>
-										<a href="#" class="fa fa-times"></a>
-									</div>
-
-									<h2 class="panel-title">My Profile</h2>
-								</header>
-								<div class="panel-body">
-									<section class="panel panel-group">
-										<header class="panel-heading bg-primary">
-
-											<div class="widget-profile-info">
-												<div class="profile-picture">
-													<img src="assets/images/!logged-user.jpg">
-												</div>
-												<div class="profile-info">
-													<h4 class="name text-semibold">John Doe</h4>
-													<h5 class="role">Administrator</h5>
-													<div class="profile-footer">
-														<a href="#">(edit profile)</a>
-													</div>
-												</div>
-											</div>
-
-										</header>
-										<div id="accordion">
-											<div class="panel panel-accordion panel-accordion-first">
-												<div class="panel-heading">
-													<h4 class="panel-title">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1One">
-															<i class="fa fa-check"></i> Tasks
-														</a>
-													</h4>
-												</div>
-												<div id="collapse1One" class="accordion-body collapse in">
-													<div class="panel-body">
-														<ul class="widget-todo-list">
-															<li>
-																<div class="checkbox-custom checkbox-default">
-																	<input type="checkbox" checked="" id="todoListItem1" class="todo-check">
-																	<label class="todo-label" for="todoListItem1"><span>Lorem ipsum dolor sit amet</span></label>
-																</div>
-																<div class="todo-actions">
-																	<a class="todo-remove" href="#">
-																		<i class="fa fa-times"></i>
-																	</a>
-																</div>
-															</li>
-															<li>
-																<div class="checkbox-custom checkbox-default">
-																	<input type="checkbox" id="todoListItem2" class="todo-check">
-																	<label class="todo-label" for="todoListItem2"><span>Lorem ipsum dolor sit amet</span></label>
-																</div>
-																<div class="todo-actions">
-																	<a class="todo-remove" href="#">
-																		<i class="fa fa-times"></i>
-																	</a>
-																</div>
-															</li>
-															<li>
-																<div class="checkbox-custom checkbox-default">
-																	<input type="checkbox" id="todoListItem3" class="todo-check">
-																	<label class="todo-label" for="todoListItem3"><span>Lorem ipsum dolor sit amet</span></label>
-																</div>
-																<div class="todo-actions">
-																	<a class="todo-remove" href="#">
-																		<i class="fa fa-times"></i>
-																	</a>
-																</div>
-															</li>
-															<li>
-																<div class="checkbox-custom checkbox-default">
-																	<input type="checkbox" id="todoListItem4" class="todo-check">
-																	<label class="todo-label" for="todoListItem4"><span>Lorem ipsum dolor sit amet</span></label>
-																</div>
-																<div class="todo-actions">
-																	<a class="todo-remove" href="#">
-																		<i class="fa fa-times"></i>
-																	</a>
-																</div>
-															</li>
-															<li>
-																<div class="checkbox-custom checkbox-default">
-																	<input type="checkbox" id="todoListItem5" class="todo-check">
-																	<label class="todo-label" for="todoListItem5"><span>Lorem ipsum dolor sit amet</span></label>
-																</div>
-																<div class="todo-actions">
-																	<a class="todo-remove" href="#">
-																		<i class="fa fa-times"></i>
-																	</a>
-																</div>
-															</li>
-															<li>
-																<div class="checkbox-custom checkbox-default">
-																	<input type="checkbox" id="todoListItem6" class="todo-check">
-																	<label class="todo-label" for="todoListItem6"><span>Lorem ipsum dolor sit amet</span></label>
-																</div>
-																<div class="todo-actions">
-																	<a class="todo-remove" href="#">
-																		<i class="fa fa-times"></i>
-																	</a>
-																</div>
-															</li>
-														</ul>
-														<hr class="solid mt-sm mb-lg">
-														<form method="get" class="form-horizontal form-bordered">
-															<div class="form-group">
-																<div class="col-sm-12">
-																	<div class="input-group mb-md">
-																		<input type="text" class="form-control">
-																		<div class="input-group-btn">
-																			<button type="button" class="btn btn-primary" tabindex="-1">Add</button>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</form>
-													</div>
-												</div>
-											</div>
-											<div class="panel panel-accordion">
-												<div class="panel-heading">
-													<h4 class="panel-title">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1Two">
-															 <i class="fa fa-comment"></i> Messages
-														</a>
-													</h4>
-												</div>
-												<div id="collapse1Two" class="accordion-body collapse">
-													<div class="panel-body">
-														<ul class="simple-user-list mb-xlg">
-															<li>
-																<figure class="image rounded">
-																	<img src="assets/images/!sample-user.jpg" alt="Joseph Doe Junior" class="img-circle">
-																</figure>
-																<span class="title">Joseph Doe Junior</span>
-																<span class="message">Lorem ipsum dolor sit.</span>
-															</li>
-															<li>
-																<figure class="image rounded">
-																	<img src="assets/images/!sample-user.jpg" alt="Joseph Junior" class="img-circle">
-																</figure>
-																<span class="title">Joseph Junior</span>
-																<span class="message">Lorem ipsum dolor sit.</span>
-															</li>
-															<li>
-																<figure class="image rounded">
-																	<img src="assets/images/!sample-user.jpg" alt="Joe Junior" class="img-circle">
-																</figure>
-																<span class="title">Joe Junior</span>
-																<span class="message">Lorem ipsum dolor sit.</span>
-															</li>
-															<li>
-																<figure class="image rounded">
-																	<img src="assets/images/!sample-user.jpg" alt="Joseph Doe Junior" class="img-circle">
-																</figure>
-																<span class="title">Joseph Doe Junior</span>
-																<span class="message">Lorem ipsum dolor sit.</span>
-															</li>
-														</ul>
-													</div>
-												</div>
-											</div>
+									<header class="panel-heading">
+										<div class="panel-actions">
+											<a href="#" class="fa fa-caret-down"></a>
+											<a href="#" class="fa fa-times"></a>
 										</div>
-									</section>
-
-								</div>
-							</section>
-						</div>
-						<div class="col-xl-3 col-lg-6">
-							<section class="panel panel-transparent">
-								<header class="panel-heading">
-									<div class="panel-actions">
-										<a href="#" class="fa fa-caret-down"></a>
-										<a href="#" class="fa fa-times"></a>
-									</div>
-
-									<h2 class="panel-title">My Stats</h2>
-								</header>
-								<div class="panel-body">
-									<section class="panel">
-										<div class="panel-body">
-											<div class="small-chart pull-right" id="sparklineBarDash"></div>
-											<script type="text/javascript">
-												var sparklineBarDashData = [5, 6, 7, 2, 0, 4 , 2, 4, 2, 0, 4 , 2, 4, 2, 0, 4];
-											</script>
-											<div class="h4 text-bold mb-none">488</div>
-											<p class="text-xs text-muted mb-none">Average Profile Visits</p>
-										</div>
-									</section>
-									<section class="panel">
-										<div class="panel-body">
-											<div class="circular-bar circular-bar-xs m-none mt-xs mr-md pull-right">
-												<div class="circular-bar-chart" data-percent="45" data-plugin-options='{ "barColor": "#2baab1", "delay": 300, "size": 50, "lineWidth": 4 }'>
-													<strong>Average</strong>
-													<label><span class="percent">45</span>%</label>
-												</div>
-											</div>
-											<div class="h4 text-bold mb-none">12</div>
-											<p class="text-xs text-muted mb-none">Working Projects</p>
-										</div>
-									</section>
-									<section class="panel">
-										<div class="panel-body">
-											<div class="small-chart pull-right" id="sparklineLineDash"></div>
-											<script type="text/javascript">
-												var sparklineLineDashData = [15, 16, 17, 19, 10, 15, 13, 12, 12, 14, 16, 17];
-											</script>
-											<div class="h4 text-bold mb-none">89</div>
-											<p class="text-xs text-muted mb-none">Pending Tasks</p>
-										</div>
-									</section>
-								</div>
-							</section>
-							<section class="panel">
-								<header class="panel-heading">
-									<div class="panel-actions">
-										<a href="#" class="fa fa-caret-down"></a>
-										<a href="#" class="fa fa-times"></a>
-									</div>
-
-									<h2 class="panel-title">
-										<span class="label label-primary label-sm text-normal va-middle mr-sm">198</span>
-										<span class="va-middle">Friends</span>
-									</h2>
-								</header>
-								<div class="panel-body">
-									<div class="content">
-										<ul class="simple-user-list">
-											<li>
-												<figure class="image rounded">
-													<img src="assets/images/!sample-user.jpg" alt="Joseph Doe Junior" class="img-circle">
-												</figure>
-												<span class="title">Joseph Doe Junior</span>
-												<span class="message truncate">Lorem ipsum dolor sit.</span>
-											</li>
-											<li>
-												<figure class="image rounded">
-													<img src="assets/images/!sample-user.jpg" alt="Joseph Junior" class="img-circle">
-												</figure>
-												<span class="title">Joseph Junior</span>
-												<span class="message truncate">Lorem ipsum dolor sit.</span>
-											</li>
-											<li>
-												<figure class="image rounded">
-													<img src="assets/images/!sample-user.jpg" alt="Joe Junior" class="img-circle">
-												</figure>
-												<span class="title">Joe Junior</span>
-												<span class="message truncate">Lorem ipsum dolor sit.</span>
-											</li>
-										</ul>
-										<hr class="dotted short">
-										<div class="text-right">
-											<a class="text-uppercase text-muted" href="#">(View All)</a>
+						
+										<h2 class="panel-title">Current Orders</h2>
+									</header>
+									<div class="panel-body">
+										<div class="table-responsive">
+											<table class="table table-bordered mb-none">
+												<thead>
+													<tr>
+														<th>S.no</th>
+														<th>Username</th>
+														<th>Food</th>
+														<th>Quantity</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php
+													//Display previous orders..!!!!
+													$sql = "SELECT username, GROUP_CONCAT(food SEPARATOR ',') food, GROUP_CONCAT(quantity SEPARATOR ',') quantity FROM orders GROUP BY username";
+													$result = $conn->query($sql);
+													$id1=1;
+													while($row = $result->fetch_assoc()) {												     		
+														echo "
+												     				<tr>
+															        <td>".$id1."</td>
+															        <td>".$row["username"]."</td>
+															        <td>".$row["food"]."</td>
+															        <td>".$row["quantity"]."</td>
+												        			</tr>
+												         ";
+												         $id1++;
+												    }
+													?>
+												</tbody>
+											</table>
 										</div>
 									</div>
-								</div>
-								<div class="panel-footer">
-									<div class="input-group input-search">
-										<input type="text" class="form-control" name="q" id="q" placeholder="Search...">
-										<span class="input-group-btn">
-											<button class="btn btn-default" type="submit"><i class="fa fa-search"></i>
-											</button>
-										</span>
-									</div>
-								</div>
-							</section>
-						</div>
-						<div class="col-xl-6 col-lg-12">
-							<section class="panel">
-								<header class="panel-heading panel-heading-transparent">
-									<div class="panel-actions">
-										<a href="#" class="fa fa-caret-down"></a>
-										<a href="#" class="fa fa-times"></a>
-									</div>
-
-									<h2 class="panel-title">Company Activity</h2>
-								</header>
-								<div class="panel-body">
-									<div class="timeline timeline-simple mt-xlg mb-md">
-										<div class="tm-body">
-											<div class="tm-title">
-												<h3 class="h5 text-uppercase">November 2013</h3>
-											</div>
-											<ol class="tm-items">
-												<li>
-													<div class="tm-box">
-														<p class="text-muted mb-none">7 months ago.</p>
-														<p>
-															It's awesome when we find a good solution for our projects, Porto Admin is <span class="text-primary">#awesome</span>
-														</p>
-													</div>
-												</li>
-												<li>
-													<div class="tm-box">
-														<p class="text-muted mb-none">7 months ago.</p>
-														<p>
-															Checkout! How cool is that!
-														</p>
-														<div class="thumbnail-gallery">
-															<a class="img-thumbnail lightbox" href="assets/images/projects/project-4.jpg" data-plugin-options='{ "type":"image" }'>
-																<img class="img-responsive" width="215" src="assets/images/projects/project-4.jpg">
-																<span class="zoom">
-																	<i class="fa fa-search"></i>
-																</span>
-															</a>
-														</div>
-													</div>
-												</li>
-											</ol>
-										</div>
-									</div>
-								</div>
-							</section>
+								</section>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-6 col-md-12">
-							<section class="panel panel-transparent">
-								<header class="panel-heading">
-									<div class="panel-actions">
-										<a href="#" class="fa fa-caret-down"></a>
-										<a href="#" class="fa fa-times"></a>
-									</div>
-
-									<h2 class="panel-title">Global Stats</h2>
-								</header>
-								<div class="panel-body">
-									<div id="vectorMapWorld" style="height: 350px; width: 100%;"></div>
-								</div>
-							</section>
-						</div>
-						<div class="col-lg-6 col-md-12">
-							<section class="panel">
-								<header class="panel-heading panel-heading-transparent">
-									<div class="panel-actions">
-										<a href="#" class="fa fa-caret-down"></a>
-										<a href="#" class="fa fa-times"></a>
-									</div>
-
-									<h2 class="panel-title">Projects Stats</h2>
-								</header>
-								<div class="panel-body">
-									<div class="table-responsive">
-										<table class="table table-striped mb-none">
-											<thead>
-												<tr>
-													<th>#</th>
-													<th>Project</th>
-													<th>Status</th>
-													<th>Progress</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>1</td>
-													<td>Porto - Responsive HTML5 Template</td>
-													<td><span class="label label-success">Success</span></td>
-													<td>
-														<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-															<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-																100%
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>Porto - Responsive Drupal 7 Theme</td>
-													<td><span class="label label-success">Success</span></td>
-													<td>
-														<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-															<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-																100%
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>Tucson - Responsive HTML5 Template</td>
-													<td><span class="label label-warning">Warning</span></td>
-													<td>
-														<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-															<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-																60%
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>Tucson - Responsive Business WordPress Theme</td>
-													<td><span class="label label-success">Success</span></td>
-													<td>
-														<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-															<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">
-																90%
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>Porto - Responsive Admin HTML5 Template</td>
-													<td><span class="label label-warning">Warning</span></td>
-													<td>
-														<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-															<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
-																45%
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>6</td>
-													<td>Porto - Responsive HTML5 Template</td>
-													<td><span class="label label-danger">Danger</span></td>
-													<td>
-														<div class="progress progress-sm progress-half-rounded m-none mt-xs light">
-															<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-																40%
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>7</td>
-													<td>Porto - Responsive Drupal 7 Theme</td>
-													<td><span class="label label-success">Success</span></td>
-													<td>
-														<div class="progress progress-sm progress-half-rounded mt-xs light">
-															<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 95%;">
-																95%
-															</div>
-														</div>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</section>
+					</br>
+						<div class="col-md-3">
+							<button onclick="location.href='index.php'" type="button" class="mb-xs mt-xs mr-xs btn btn-danger btn-block">
+							<i class="fa fa-times"></i>Go Back
+							</button>
 						</div>
 					</div>
+			<!-- end: page -->
+				</section>
+			</div>
+
+					
 					<!-- end: page -->
 				</section>
 			</div>
