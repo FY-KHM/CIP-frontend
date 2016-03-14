@@ -37,6 +37,9 @@ if ($conn->connect_error) {
 $sqlme = "SELECT * FROM menucard";
 $result1 = $conn->query($sqlme);
 
+$sqlord = "SELECT * FROM orders where username='$uname' ORDER BY id DESC LIMIT 5"; 
+$resultord = $conn->query($sqlord);
+
 //
 $sqlmen = "SELECT * FROM customers where name = '$uname'";
 $result3 = $conn->query($sqlmen);
@@ -45,7 +48,7 @@ while($row = $result3->fetch_assoc()){
 }
 
 //Insert the food items which is not equal to zero
-for($i=0;$i<4;$i++)
+for($i=0;$i<6;$i++)
 {
 	if($quantitypieces[$i]!=0)
 	{
@@ -63,12 +66,22 @@ for($i=0;$i<4;$i++)
 				$machine = $row['machine'];
 			}
 		}
+
+		while($row = $resultord->fetch_assoc())
+		{
+			if($f == $row['food'])
+			{
+				$quantity = $row['quantity'];
+			}
+		}
 		if($machine == 1)
 			$tablemach = 'idmaster';
 		else if($machine == 2)
 			$tablemach = 'chmaster';
 		else if($machine == 3)
 			$tablemach = 'ffmaster';
+
+		$time = $time * $quantity;
 
 		$sql2 = "INSERT INTO $tablemach (userid, food, time) VALUES ('$userid', '$f', '$time')";
 		$result2 = $conn->query($sql2);
@@ -84,7 +97,8 @@ $lasttoken = $lasttoken++;
 $sql4 = "INSERT INTO tokengiver (username, token) VALUES ('$uname','$lasttoken')";
 $result4 = $conn->query($sql4);
 // Redirect after inserting into Database...
-echo '<script type="text/javascript">
-	                 window.location = "addorder.php"
-	            </script>';
+//echo '<script type="text/javascript">
+//	                 window.location = "addorder.php"
+//	            </script>';
+echo "added".$time;
 ?>

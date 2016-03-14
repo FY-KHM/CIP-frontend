@@ -2,8 +2,8 @@
 <?php
 // Start the session
 session_start();
-ini_set("display_errors", 1);
-error_reporting(-1);
+//ini_set("display_errors", 1);
+//error_reporting(-1);
       $ip=$_SERVER['REMOTE_ADDR'];
 //      $mac = shell_exec('arp '.$ip.' | awk \'{print $4}\'');
       if(!isset($_SESSION["ip"]) && !isset($_SESSION["uname"])) {
@@ -59,16 +59,17 @@ error_reporting(-1);
 			//To get Serving Queue
 	    	$sqlserve = "SELECT * FROM tokengiver";
 			$result2 = $conn->query($sqlserve);
+			$idsum = mysqli_num_rows($result2);
 			while($row = $result2->fetch_assoc()) {
-	    	if($row['username'] == $user)
 	    		$chkpt = $row['id'];
+	    		$idsum++;
 	    	}
 	    	//Serving Queue;
-			if($chkpt == 0 )
+			if($idsum == 0 )
 				$servingqueue = '100';
 			else
 			{
-				$servingqueue = 100 - $chkpt/$ids;
+				$servingqueue = 100 - $chkpt;
 			}
 
 			//Get Serving time from all 2 tables
@@ -110,7 +111,20 @@ error_reporting(-1);
 			$row7 = $rfftime->fetch_assoc();
 			$ffmasttime = $row7['tot'];
 
-			$totaltimetoserve = $idmasttime + $chmasttime + $ffmasttime;
+			if($idmasttime > $chmasttime)
+			{
+				if($idmasttime> $ffmasttime)
+					$totaltimetoserve = $idmasttime;
+				else
+					$totaltimetoserve = $ffmasttime;
+			}
+			else
+				$totaltimetoserve = $chmasttime;
+			if($totaltimetoserve >45)
+			{
+				$errorval = "DoS attack alert! Contact ADMIN.";
+
+			}
 
 ?>
 <html class="fixed">
@@ -263,10 +277,11 @@ error_reporting(-1);
 													Current Token on process: 
 													<strong><?php echo $tokennum; ?></strong>
 												</h2></br></br>
+												<?php if(isset($errorval)) {echo $errorval;} else{ ?>
 												<h3>You will be served after <?php echo $totaltimetoserve; ?>minutes if you order now!</h3>
 												Scroll below to add an order.</br>
 												New Orders get new Tokens Automatically.</br>
-												Note: Predictable Token Number may vary from the token shown above.</br>
+												Note: Predictable Token Number may vary from the token shown above.</br> <?php } ?>
 											</div>
 										</div>
 										<div class="col-lg-4 text-center">
